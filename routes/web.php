@@ -80,3 +80,12 @@ Route::prefix('agences')->group(function () {
     Route::post('update', 'App\Http\Controllers\AgenceController@update')->name('agenceUpdate');
     Route::delete('delete/{id}', 'App\Http\Controllers\AgenceController@destroy')->name('agenceDelete');
 });
+
+Route::prefix('categories')->group(function () {
+    Route::get('list', 'App\Http\Controllers\CategorieController@index')->name('categorieIndex');
+    Route::get('add', 'App\Http\Controllers\CategorieController@create')->name('categorieAddForm');
+    Route::post('store', 'App\Http\Controllers\CategorieController@Store')->name('categorieStore');
+    Route::get('edit/{id}', 'App\Http\Controllers\CategorieController@edit')->name('categorieUpdateForm');
+    Route::post('update', 'App\Http\Controllers\CategorieController@update')->name('categorieUpdate');
+    Route::delete('delete/{id}', 'App\Http\Controllers\CategorieController@destroy')->name('categorieDelete');
+});

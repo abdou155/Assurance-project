@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategorieController extends Controller
 {
@@ -14,7 +15,8 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        //
+        $categorieList = Categorie::all();
+        return view('pages.categorie_list' , ['categories' => $categorieList]);
     }
 
     /**
@@ -24,7 +26,12 @@ class CategorieController extends Controller
      */
     public function create()
     {
-        //
+        if (Auth::check() && Auth::user()->role == 0) {
+            return view('pages.categorie_form' , ['context' => 'create' ] );
+
+        }else{
+            return view('static.403');
+        }
     }
 
     /**
@@ -35,7 +42,18 @@ class CategorieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::check() && Auth::user()->role == 0) {
+
+            $categorie = new Categorie();
+            $categorie->title = $request->title;
+            $categorie->description = $request->description;
+            $categorie->save();
+
+            return redirect('categories/list');
+
+        }else{
+            return view('static.403');
+        }
     }
 
     /**
