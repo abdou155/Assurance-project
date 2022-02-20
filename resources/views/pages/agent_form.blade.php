@@ -1,17 +1,31 @@
 @extends('layouts.app', ['activePage' => 'agents', 'titlePage' => __('Agent Form')])
-
+{{-- TODO  --}}
 @section('content')
     <div class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="post" action="{{ route('agentStore') }}" autocomplete="off" class="form-horizontal">
+                    <form method="post" @if ($context == 'update')
+                    action="{{ route('agentUpdate') }}"
+                    @else
+                        action="{{ route('agentStore') }}"
+                    @endif
+                 autocomplete="off" class="form-horizontal">
                         @csrf
                         @method('post')
 
+
+                        @if ($context == 'update')
+                            <input hidden type="text" name="id" value="{{$agence->id}}">
+                        @endif
+
                         <div class="card ">
                             <div class="card-header card-header-success">
-                                <h4 class="card-title">{{ __('Ajouter un agent') }}</h4>
+                                @if ($context == 'update')
+                                <h4 class="card-title">{{ __('Modifier un agent') }}</h4>
+                                @else
+                                    <h4 class="card-title">{{ __('Ajouter un agent') }}</h4>
+                                @endif
                             </div>
                             <div class="card-body ">
                                 <div class="row justify-content-center">
@@ -58,8 +72,8 @@
                                         <label class="">{{ __('Titre') }}</label>
                                         <div class="form-group{{ $errors->has('title') ? ' has-danger' : '' }}">
                                             <select class="form-control" data-style="btn btn-link" name="title"
-                                                aria-label="Default select example">
-                                                <option selected>-- Choisir un titre --</option>
+                                                aria-label="Default select example" required>
+                                                <option disabled selected>-- Choisir un titre --</option>
                                                 @foreach ($titleList as $key => $value)
                                                     <option value="{{$key}}">{{$value}}</option>
                                                 @endforeach
@@ -76,8 +90,8 @@
                                         <label class="">{{ __('Agence') }}</label>
                                         <div class="form-group{{ $errors->has('agence') ? ' has-danger' : '' }}">
                                             <select class="form-control " data-style="btn btn-link" name="agence"
-                                                aria-label="Default select example">
-                                                <option selected>-- Affecter à une agence --</option>
+                                                aria-label="Default select example" required>
+                                                <option disabled selected>-- Affecter à une agence --</option>
                                                 @foreach ($agenceList as $key => $value)
                                                     <option value="{{$key}}">{{$value}}</option>
                                                 @endforeach

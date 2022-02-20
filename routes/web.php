@@ -66,10 +66,10 @@ Route::prefix('agents')->group(function () {
     Route::get('list', 'App\Http\Controllers\AgentController@index')->name('agentIndex');
     Route::get('add', 'App\Http\Controllers\AgentController@create')->name('agentAddForm');
     Route::post('store', 'App\Http\Controllers\AgentController@Store')->name('agentStore');
-/*     Route::put('update', 'App\Http\Controllers\AgentController@Index')->name('agentUpdate');
-    Route::put('update', 'App\Http\Controllers\AgentController@Index')->name('agentUpdate');
-    Route::delete('agentList', 'App\Http\Controllers\AgentController@Index')->name('agentIndex');
-    Route::get('agentList', 'App\Http\Controllers\AgentController@Index')->name('agentIndex'); */
+    /* TODO */
+    /* Route::get('edit/{id}', 'App\Http\Controllers\AgentController@edit')->name('agentUpdateForm');
+    Route::post('update', 'App\Http\Controllers\AgentController@update')->name('agentUpdate'); */
+    Route::delete('delete/{id}', 'App\Http\Controllers\AgentController@destroy')->name('agentDelete');
 });
 
 Route::prefix('agences')->group(function () {
@@ -78,5 +78,5 @@ Route::prefix('agences')->group(function () {
     Route::post('store', 'App\Http\Controllers\AgenceController@Store')->name('agenceStore');
     Route::get('edit/{id}', 'App\Http\Controllers\AgenceController@edit')->name('agenceUpdateForm');
     Route::post('update', 'App\Http\Controllers\AgenceController@update')->name('agenceUpdate');
-    Route::delete('delete/{id}', 'App\Http\Controllers\AgenceController@destroy')->name('agentDelete');
+    Route::delete('delete/{id}', 'App\Http\Controllers\AgenceController@destroy')->name('agenceDelete');
 });

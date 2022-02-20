@@ -14,7 +14,7 @@ class UpdateProfilesTable extends Migration
     public function up()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            $table->integer('agnece_id')->unsigned()->nullable();
+            $table->integer('agence_id')->unsigned()->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class UpdateProfilesTable extends Migration
     public function down()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            $table->dropColumn('agnece_id');
+            $table->dropColumn('agence_id');
         });
     }
 }

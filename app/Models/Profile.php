@@ -26,14 +26,9 @@ class Profile extends Model
     }
 
 
-    public function user()
-    {
-        return $this->belongsTo('App\User');
-    }
-
     public function agence()
     {
-        return $this->belongsTo('App\Agence');
+        return $this->belongsTo('App\Models\Agence');
     }
 }
 

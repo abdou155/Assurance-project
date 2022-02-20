@@ -8,7 +8,8 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\Auth\RegisterController;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 
 class AgentController extends Controller
@@ -20,7 +21,7 @@ class AgentController extends Controller
      */
     public function index()
     {
-        $agentList = User::where('role' , 1)->get();
+        $agentList = User::with('profile')->where('role' , 1)->get();
         return view('pages.agent_list', ['agents' => $agentList]);
     }
 
@@ -34,7 +35,7 @@ class AgentController extends Controller
         if (Auth::check() && Auth::user()->role == 0) {
             $agenceList = Agence::getAgenceList();
             $titleList = Profile::getAgentTitleList();
-            return view('pages.agent_form' , ['agenceList' => $agenceList ,  "titleList" => $titleList ] );
+            return view('pages.agent_form' , ['agenceList' => $agenceList ,  "titleList" => $titleList ,'context' => 'create' ] );
 
         }else{
             return view('static.403');
@@ -51,33 +52,41 @@ class AgentController extends Controller
     {
         if (Auth::check() && Auth::user()->role == 0) {
 
-            $profileData= [
-                'name' => $request->name,
-                'family_name' => $request->family_name,
-                'title' => $request->title,
-                'cin' => $request->cin,
-                'sexe' => $request->genre,
-                'region' => $request->region,
-                'agence_id' => $request->agence
-            ];
+            $rules = ['email' => ['required', 'string', 'email', 'max:255', 'unique:users'],];
 
-            $profile = Profile::create($profileData);
-            if($profile->id){
-                $random_pass = User::randomPassword();
-                $userData = [
-                    'name' => $request->name.' '.$request->family_name,
-                    'email' => $request->email,
-                    'role' => User::USER_AGENT,
-                    'password' => Hash::make($random_pass),
-                    'profile_id' => $profile->id
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails())
+            {
+                return Redirect::to('/agents/add')->withInput()->withErrors($validator);
+
+            }else{
+                $profileData= [
+                    'name' => $request->name,
+                    'family_name' => $request->family_name,
+                    'title' => $request->title,
+                    'cin' => $request->cin,
+                    'sexe' => $request->genre,
+                    'region' => $request->region,
+                    'agence_id' => $request->agence
                 ];
-                $user = User::create($userData);
+
+                $profile = Profile::create($profileData);
+                if($profile->id){
+                    $random_pass = User::randomPassword();
+                    $userData = [
+                        'name' => $request->name.' '.$request->family_name,
+                        'email' => $request->email,
+                        'role' => User::USER_AGENT,
+                        'password' => Hash::make($random_pass),
+                        'profile_id' => $profile->id
+                    ];
+                    User::create($userData);
+                }
+
+                return redirect('agents/list');
+
             }
-
-
-            dd($user->toArray);
-
-            return view('pages.agent_form' , ['agenceList' => '' ,  "titleList" => '' ] );
 
         }else{
             return view('static.403');
@@ -101,9 +110,18 @@ class AgentController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        //
+        if (Auth::check() && Auth::user()->role == 0) {
+            $agent = User::with('profile')->find($id);
+            $agenceList = Agence::getAgenceList();
+            $titleList = Profile::getAgentTitleList();
+            if (isset($agent) && $agent){
+                return view('pages.agent_form' ,["agent" => $agent , 'context' => 'update' ,  'agenceList' => $agenceList ,  "titleList" => $titleList ]);
+            }
+        }else{
+            return view('static.403');
+        }
     }
 
     /**
@@ -124,8 +142,15 @@ class AgentController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $user = User::with('profile')->find($id);
+        $profile = Profile::find($user->profile_id);
+        $profile->delete();
+        $user->delete();
+        return response()->json([
+            'id' => $id ,
+            'success' => 'Record deleted successfully!'
+        ]);
     }
 }
