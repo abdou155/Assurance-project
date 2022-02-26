@@ -96,8 +96,13 @@ class CategorieController extends Controller
      * @param  \App\Models\Categorie  $categorie
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Categorie $categorie)
+    public function destroy($id)
     {
-        //
+        $categorie = Categorie::find($id);
+        $categorie->delete();
+        return response()->json([
+            'id' => $id ,
+            'success' => 'Record deleted successfully!'
+        ]);
     }
 }

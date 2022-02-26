@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="col-sm-12">
-                                        <label class="">{{ __('Email') }}</label>
+                                        <label class="">{{ __('Description') }}</label>
                                         <div class="form-group">
                                             <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3"></textarea>
                                           </div>

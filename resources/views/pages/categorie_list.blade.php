@@ -15,7 +15,7 @@
               </div>
               <hr>
               @foreach ($categories as $key => $value)
-              <div class="row">
+              <div class="row" id="categorie">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-text card-header-success">

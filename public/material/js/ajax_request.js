@@ -66,3 +66,40 @@ $(".deleteAgent").click(function(e){
       return false;
 
 });
+
+$(".deleteCategorie").click(function(e){
+
+    if(!confirm("Do you really want to do this?")) {
+       return false;
+     }
+
+    e.preventDefault();
+    var id = $(this).data("id");
+    var token = $("meta[name='csrf-token']").attr("content");
+
+    console.log(id);
+
+    $.ajax({
+            url: "delete/"+id,
+            type: 'DELETE',
+            data: {
+                "id": id,
+                "_token": token,
+            },
+        success: function (response){
+
+            console.log(response);
+            $( "#categorie" ).fadeOut( "slow", function() {
+                return false;
+              });
+
+           /*  Swal.fire(
+              'Remind!',
+              'Company deleted successfully!',
+              'success'
+            ) */
+        }
+     });
+      return false;
+
+});
