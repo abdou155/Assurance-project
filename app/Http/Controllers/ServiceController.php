@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorie;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
@@ -14,7 +16,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        //
+        $service = Service::with('categorie')->get();
+        return view('pages.service_list', ['services' => $service]);
     }
 
     /**
@@ -24,7 +27,13 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        //
+        if (Auth::check() && Auth::user()->role == 0) {
+            $categoriesList = Categorie::select('id' , 'title')->pluck('title' , 'id');
+            return view('pages.service_form' , ['context' => 'create' , 'categories' => $categoriesList  ] );
+
+        }else{
+            return view('static.403');
+        }
     }
 
     /**
@@ -35,7 +44,20 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::check() && Auth::user()->role == 0) {
+
+            $service = new Service();
+            $service->title = $request->title;
+            $service->description = $request->description;
+            $service->price = $request->price;
+            $service->categorie_id = $request->categorie_id;
+            $service->save();
+
+            return redirect('services/list');
+
+        }else{
+            return view('static.403');
+        }
     }
 
     /**
@@ -44,9 +66,10 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show(Service $service)
+    public function show($id)
     {
-        //
+        $service = Service::find($id);
+        return view('pages.service_detail' , ['context' => 'preview' , 'service' => $service  ] );
     }
 
     /**
@@ -78,8 +101,13 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy($id)
     {
-        //
+        $service = Service::find($id);
+        $service->delete();
+        return response()->json([
+            'id' => $id ,
+            'success' => 'Record deleted successfully!'
+        ]);
     }
 }

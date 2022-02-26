@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,35 +27,6 @@ Auth::routes();
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home')->middleware('auth');
 
-Route::group(['middleware' => 'auth'], function () {
-	Route::get('table-list', function () {
-		return view('pages.table_list');
-	})->name('table');
-
-	Route::get('typography', function () {
-		return view('pages.typography');
-	})->name('typography');
-
-	Route::get('icons', function () {
-		return view('pages.icons');
-	})->name('icons');
-
-	Route::get('map', function () {
-		return view('pages.map');
-	})->name('map');
-
-	Route::get('notifications', function () {
-		return view('pages.notifications');
-	})->name('notifications');
-
-	Route::get('rtl-support', function () {
-		return view('pages.language');
-	})->name('language');
-
-	Route::get('upgrade', function () {
-		return view('pages.upgrade');
-	})->name('upgrade');
-});
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
@@ -88,4 +61,19 @@ Route::prefix('categories')->group(function () {
     Route::get('edit/{id}', 'App\Http\Controllers\CategorieController@edit')->name('categorieUpdateForm');
     Route::post('update', 'App\Http\Controllers\CategorieController@update')->name('categorieUpdate');
     Route::delete('delete/{id}', 'App\Http\Controllers\CategorieController@destroy')->name('categorieDelete');
+});
+
+Route::prefix('services')->group(function () {
+    Route::get('list', 'App\Http\Controllers\ServiceController@index')->name('serviceIndex');
+    Route::get('show/{id}', 'App\Http\Controllers\ServiceController@show')->name('serviceShow');
+    Route::get('add', 'App\Http\Controllers\ServiceController@create')->name('serviceAddForm');
+    Route::post('store', 'App\Http\Controllers\ServiceController@Store')->name('serviceStore');
+    Route::get('edit/{id}', 'App\Http\Controllers\ServiceController@edit')->name('serviceUpdateForm');
+    Route::post('update', 'App\Http\Controllers\ServiceController@update')->name('serviceUpdate');
+    Route::delete('delete/{id}', 'App\Http\Controllers\ServiceController@destroy')->name('serviceDelete');
+});
+
+
+Route::prefix('contacts')->group(function () {
+    Route::get('show/{id}', 'App\Http\Controllers\HomeController@showContact')->name('contactShow');
 });

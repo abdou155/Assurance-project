@@ -29,8 +29,8 @@
               <div class="card-icon">
                 <i class="material-icons">store</i>
               </div>
-              <p class="card-category">Agents</p>
-              <h3 class="card-title">$34,245</h3>
+              <p class="card-category">Agence</p>
+              <h3 class="card-title">{{$nb_agence}}</h3>
             </div>
             <div class="card-footer">
               <div class="stats">
@@ -40,30 +40,15 @@
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <div class="card card-stats">
-            <div class="card-header card-header-danger card-header-icon">
-              <div class="card-icon">
-                <i class="material-icons">info_outline</i>
-              </div>
-              <p class="card-category">Service</p>
-              <h3 class="card-title">75</h3>
-            </div>
-            <div class="card-footer">
-              <div class="stats">
-                <i class="material-icons">local_offer</i> Tracked from Github
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="card card-stats">
             <div class="card-header card-header-info card-header-icon">
               <div class="card-icon">
-                <i class="fa fa-twitter"></i>
+                <i class="fa fa-bell"></i>
               </div>
-              <p class="card-category">Clients</p>
-              <h3 class="card-title">+245</h3>
+              <p class="card-category">Services</p>
+              <h3 class="card-title">{{$nb_service}}</h3>
             </div>
             <div class="card-footer">
               <div class="stats">
@@ -72,6 +57,22 @@
             </div>
           </div>
         </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-header card-header-danger card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">info_outline</i>
+                </div>
+                <p class="card-category">New Contacts</p>
+                <h3 class="card-title">{{$nb_contact}}</h3>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <i class="material-icons">local_offer</i> Tracked from Github
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
       {{-- <div class="row">
         <div class="col-md-4">
@@ -379,36 +380,34 @@
             <div class="card-body table-responsive">
               <table class="table table-hover">
                 <thead class="text-success">
-                  <th>ID</th>
+                  <th>Status</th>
                   <th>Name</th>
-                  <th>Salary</th>
-                  <th>Country</th>
+                  <th>Email</th>
+                  <th>Subject</th>
+                  <th>Vu</th>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Dakota Rice</td>
-                    <td>$36,738</td>
-                    <td>Niger</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Minerva Hooper</td>
-                    <td>$23,789</td>
-                    <td>Curaçao</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Sage Rodriguez</td>
-                    <td>$56,142</td>
-                    <td>Netherlands</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Philip Chaney</td>
-                    <td>$38,735</td>
-                    <td>Korea, South</td>
-                  </tr>
+                    @foreach ($contacts as $key => $value)
+                    <tr id="row_id_{{$value->id}}">
+                        <td>
+                            @if ($value->is_readed == 0)
+                                <span class="badge badge-danger">New</span>
+                            @endif
+                        </td>
+                        <td>
+                            {{ $value->name }}
+                        </td>
+                        <td>
+                            {{ $value->email }}
+                        </td>
+                        <td>
+                            {{ $value->subject }}
+                        </td>
+                        <td>
+                            <a href="/contacts/show/{{$value->id}}">Vu</a>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
               </table>
             </div>

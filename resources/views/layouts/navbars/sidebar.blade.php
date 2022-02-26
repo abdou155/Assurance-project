@@ -61,14 +61,14 @@
         </a>
       </li>
       <li class="nav-item{{ $activePage == 'services' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('table') }}">
+        <a class="nav-link" href="{{ route('serviceIndex') }}">
           <i class="material-icons">room_service</i>
             <p>{{ __('services') }}</p>
         </a>
       </li>
       <hr>
       <li class="nav-item{{ $activePage == 'clients' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('table') }}">
+        <a class="nav-link"  href="#">
           <i class="material-icons">account_circle</i>
             <p>{{ __('Clients') }}</p>
         </a>
